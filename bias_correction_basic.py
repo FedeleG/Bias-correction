@@ -1,9 +1,23 @@
 #!/usr/bin/env python
 '''
-Bias_correction python script.
-Description: Bias Correction techniques for correcting simulatitudeed output based on differences between the CDFs of
-observed and simulatitudeed output for a training period.
+Author:
+-v1 ---- Francesco Repola, Ilenia Manco, Carmine De Lucia (09/2021)
 
+-v2 ---- Giusy Fedele, Carmine De Lucia                   (02/2022)
+
+-v3 ---- Giusy Fedele					                  (09/2022)
+
+-v4 ---- Giusy Fedele					                  (10/2022)
+
+-v5 ---- Giusy Fedele                                     (08/2024)
+
+For any info please contact giusy.fedele@cmcc.it
+
+Bias_correction python script.
+Description: Bias Correction techniques for correcting simulated output based on differences between the CDFs of
+observed and simulated output for a training period.
+
+Code structure:
 -the bias_correction function is defined
 -load observed data
 -load model training data
@@ -11,28 +25,7 @@ observed and simulatitudeed output for a training period.
 -call bias_correction function (obs,training,test)
 -the bias_corrected output is saved in NetCDF format
 
-Author:
--v1 ---- Francesco Repola, Ilenia Manco, Carmine De Lucia (09/2021)
 
--v2 ---- Giusy Fedele, Carmine De Lucia                   (02/2022)
-
--v3 ---- Giusy Fedele					  (09/2022)
-
--v4 ---- Giusy Fedele					  (10/2022)
-
--v5 ---- Giusy Fedele                                     (08/2024)
-'''
-
-#Import python module
-import os
-import xarray as xr
-import string
-import pandas as pd
-import numpy as np
-from scipy.stats.mstats import mquantiles
-from scipy.interpolate import interp1d
-
-'''
 def bias_correction function with input parameters
 
     three different methods are available
@@ -71,11 +64,18 @@ def bias_correction function with input parameters
 
     based on R-package downscaleR, source:
     https://github.com/SantanderMetGroup/downscaleR/wiki/Bias-Correction-and-Model-Output-Statistics-(MOS)
-
 '''
 
-def bias_correction(obs, p, s, method='eqm', nbins=100, extrapolate=None):
+#Import python module
+import os
+import xarray as xr
+import string
+import pandas as pd
+import numpy as np
+from scipy.stats.mstats import mquantiles
+from scipy.interpolate import interp1d
 
+def bias_correction(obs, p, s, method='eqm', nbins=100, extrapolate=None):
 
     if (method == 'eqm') and (nbins > 1):
         # list of quantiles to be computed
@@ -107,11 +107,6 @@ def bias_correction(obs, p, s, method='eqm', nbins=100, extrapolate=None):
    
     return c
 
-
-def open_wrf_aux(path):
-    ds = xr.open_(path,combine='nested',concat_dim='time',coords='minimal', chunks={'time': 50, 'latitude': -1, 'longitude': -1}) 
-    return ds
-
 #################
 # Assign directory
 
@@ -131,9 +126,9 @@ mod = os.path.join(M_dir,mod_name)
 ds_model = xr.open_dataset(mod)
 
 #TO SETTLE CALIBRATION AND CORRECTION PERIOD
-timeslice = slice('YYYY-MM-DD', 'YYYY-MM-DD') #whole model period (START DATE - END DATE)
-calibration_timeline = slice('YYYY-MM-DD', 'YYYY-MM-DD') #period where the correction mask is computed (START DATE - END DATE)
-timeline = slice('YYYY-MM-DD', 'YYYY-MM-DD') #period where the correction mask is applied (START DATE - END DATE)
+timeslice = slice('YYYY-MM-DD', 'YYYY-MM-DD') #Put whole model period (START DATE - END DATE)
+calibration_timeline = slice('YYYY-MM-DD', 'YYYY-MM-DD') #Put period where the correction mask is computed (START DATE - END DATE)
+timeline = slice('YYYY-MM-DD', 'YYYY-MM-DD') #Put period where the correction mask is applied (START DATE - END DATE)
 
 #Applying Bias-Correction on Monthly basis in order to mantain climatology
 for i in range(1,13):
