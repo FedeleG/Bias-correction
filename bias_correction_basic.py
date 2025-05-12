@@ -183,3 +183,4 @@ for i in range(1,13):
 
 #ONCE THE CODE IS ENDED EXECUTE ON COMMAND LINE THE FOLLOWING CDO COMMAND OVER THE BIAS-CORRECTED MODEL OUTPUTS IN ORDER TO MERGE THEM OVER TIME DIMENSION:
 #cdo mergetime Month*.nc
+# Info: CDO TOOL: Schulzweida, U. (2019). Climate Data Operators (CDO) User Guide (Version 1.9.8) [Software]. Max-Planck-Institute for Meteorology. http://code.mpimet.mpg.de/projects/cdo
